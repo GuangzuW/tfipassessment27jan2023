@@ -116,14 +116,13 @@ public class Data {
         List<Integer>copyWordCounts=new ArrayList<>(data.wordCounts);
         List<String>copyWords=new ArrayList<>(data.words);
         int previousmax=-1;     //hold previous max value, to check whether words have same frequency.
-        int limit=0;
+        int limit=10;
         int max=0;
 
-        for(int i=0;i<copyWordCounts.size()&limit<10;i++){
-
+        while((limit!=0) && (copyWordCounts.size()!=0)){
             max=Collections.max(copyWordCounts);
             //same frequency count as same rank
-            if(previousmax!=max){limit++;}
+            if(previousmax!=max){limit--;}
             int index=copyWordCounts.indexOf(max);
             copyWordCounts.remove(index);
             String word= copyWords.get(index);
@@ -132,8 +131,9 @@ public class Data {
             copyWords.remove(index);
             double frequency=(double)max/data.totalWordCounts;
             previousmax=max;
-            System.out.printf("Top %d frequency word is: \" %s \", it appears %d times, and frequency is %.3f .",limit,word,max,frequency);
+            System.out.printf("Top %d frequency word is: \" %s \", it appears %d times, and frequency is %.3f .",Math.abs(limit-10),word,max,frequency);
             System.out.println();
+
         }
     }
 
