@@ -9,7 +9,7 @@ public class Main {
         String $last="0";
 
         while (true){
-            String input =cons.readLine(">");
+            String input =cons.readLine("> ");
             String result;
                 
             if (input.equalsIgnoreCase("exit")){
