@@ -54,7 +54,7 @@ public class Data {
 
 
 
-    public Data getData(Data data, String fileName) throws IOException{
+    public Data readData(Data data, String fileName) throws IOException{
         
         String dirPath="testfilefolder";
         File newDirectory=new File(dirPath);
@@ -83,12 +83,12 @@ public class Data {
                 }
                 line=line.trim().toLowerCase();
                 String[]splitedLine=line.split(" ");
-                //look for contain in the list words, if word in the splitedline inside the words list, the word totalcount and coresponding wordcount +1
-                //if not in the words list, add the word in the words list and set the coressponding the wordcounts to 1
+                //look through words in the words list, if word in the splitedline inside the words list, the word totalWordCount and coresponding wordcount +1;
+                //if not in the words list, add the word in the words list and set the coressponding the wordcounts to 1, and totalWordCount +1;
                 for (int j=0;j<splitedLine.length;j++){
                     boolean wordFound=false;
-                    if(data.words==null){
-                        data.words.add(" ");
+                    if(data.words==null && data.wordCounts==null ){
+                        data.words.add("");
                         data.wordCounts.add(0);
                     }
                     for(int k=0;k<data.words.size();k++){
@@ -101,41 +101,39 @@ public class Data {
                         }     
                     }
                     if(!wordFound){
-                        if(splitedLine[j]==""){continue;}
                         data.words.add(splitedLine[j]);
                         data.wordCounts.add(1);
                         data.totalWordCounts++;
                     }    
                 }
-                
             }
             br.close();
-            
         }
         return data;
-
     }
 
     public void printTop10 (Data data){
-
         List<Integer>copyWordCounts=new ArrayList<>(data.wordCounts);
         List<String>copyWords=new ArrayList<>(data.words);
-        int previousmax=-1;
+        int previousmax=-1;     //hold previous max value, to check whether words have same frequency.
         int limit=0;
         int max=0;
 
         for(int i=0;i<copyWordCounts.size()&limit<10;i++){
 
-                max=Collections.max(copyWordCounts);
-                if(previousmax!=max){limit++;}
-                int index=copyWordCounts.indexOf(max);
-                copyWordCounts.remove(index);
-                String word= copyWords.get(index);
-                copyWords.remove(index);
-                double frequency=(double)max/data.totalWordCounts;
-                previousmax=max;
-                System.out.printf("Top %d frequency word is: \"%s\", it appears %d times, and frequency is %.3f .",limit,word,max,frequency);
-                System.out.println();
+            max=Collections.max(copyWordCounts);
+            //same frequency count as same rank
+            if(previousmax!=max){limit++;}
+            int index=copyWordCounts.indexOf(max);
+            copyWordCounts.remove(index);
+            String word= copyWords.get(index);
+            //ignore "" if it's in the Arraylist
+            if(word.equals("")){continue;}
+            copyWords.remove(index);
+            double frequency=(double)max/data.totalWordCounts;
+            previousmax=max;
+            System.out.printf("Top %d frequency word is: \" %s \", it appears %d times, and frequency is %.3f .",limit,word,max,frequency);
+            System.out.println();
         }
     }
 
